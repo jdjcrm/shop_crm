@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
-   public function login(){
+   public function login(Request $request){
        return view('crm.login');
    }
 
@@ -44,12 +44,13 @@ class LoginController extends Controller
             $salt=$arr['salt'];
             $new_pwd=md5(md5($pwd).$salt);
 //            echo $new_pwd;exit;
+
             if ($new_pwd == $arr['u_pwd']) {
 
                 //算出还有多长时间登录
-                $minutes = ceil((3600 - (time() - $arr['u_clear'])) / 60);
-                if ($arr['u_error'] >= 5 && (time() - $arr['u_clear'] < 3600)) {
-                    return ['msg' => '已锁定,还有' . $minutes . '分钟', 'code' => 5];
+//                $minutes = ceil((3600 - (time() - $arr['u_clear'])) / 60);
+                if ($arr['u_error'] >= 5 ) {
+                    return ['msg' => '已锁定,请找管理员解锁','code' => 5];
                 }else{
                     //加盐值
                     $str = "qwertyuiopasdfghjklzxcvbnm;@%+-*/1234567890";
@@ -64,14 +65,66 @@ class LoginController extends Controller
                         'u_pwd'=>$pwds
                     ];
                     $obj->getUpdate($arr['u_id'],$data);
+                        $id=$arr['u_id'];
+                        $name=$arr['u_name'];
+                    session('id',$id);
+                    session('name',$name);
+//                    $request->session()->put('id',$id);
+//                    $request->session()->put('name',$name);
                         return ['msg'=>'登录成功','icon'=>1,'status'=>1];
 
                 }
             }else{
-                echo '密码不正确';
+               #密码错误
+               #判断当前最后一次输入错误时间大约一个小时就不累加，否则就继续累加
+               #当前时间
+                $time = time();
+                #错误次数
+                $u_error = $arr['u_error'];
+
+
+                #错误时间大于一个小时就把次数改成一
+                if($time-$arr['u_clear']>3600){
+                    $data=[
+                        'u_error'=>1,
+                        'u_clear'=>$time,
+                        'utime'=>$time,
+                    ];
+                    $res1=$obj->getUpdate($arr['u_id'],$data);
+                    if($res1){
+                        return ['msg'=>'您还可以输入4次','icon'=>2,'status'=>2];
+                    }
+                }else{
+
+                    if($u_error>=5){
+                        $data = [
+                            'u_error'=>0,
+                            'u_clear'=>0,
+                            'utime'=>$time,
+                            'status'=>3
+                        ];
+                        $obj ->getUpdate($arr['u_id'],$data);
+                        return ['msg'=>'您的账号已经被锁定，请找管理员解开','icon'=>2,'status'=>2];
+                    }else{
+                        $u_error++;
+                        $data=[
+                            'u_error'=>$u_error,
+                            'u_clear'=>$time,
+                            'utime'=>$time,
+                        ];
+                        $res2=$obj->getUpdate($arr['u_id'],$data);
+                        if($res2){
+                            return ['msg'=>'您还可以输入'.(5-$u_error).'次','icon'=>2,'status'=>2];
+                        }
+                    }
+
+
+
+
+                }
 
             }
-//            return ['msg'=>'登录成功','icon'=>1,'status'=>1];
+
         }
 
 
