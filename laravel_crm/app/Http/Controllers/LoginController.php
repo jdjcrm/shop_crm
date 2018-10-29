@@ -1,12 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Model\User;
 
 class LoginController extends BaseController
 {
@@ -24,7 +21,15 @@ class LoginController extends BaseController
         if(empty($pwd)){
             return ['msg'=>'密码不能为空','icon'=>5,'status'=>2];
         }
-
+        $obj=new User();
+        $where = [
+            'u_name'=>$name
+        ];
+        $res=$obj->gitSel($where);
+        print_r($res);exit;
+        if(!$res){
+            return ['msg'=>'此用户不存在','icon'=>5,'status'=>2];
+        }
         return ['msg'=>'登录成功','icon'=>1,'status'=>1];
     }
 }
