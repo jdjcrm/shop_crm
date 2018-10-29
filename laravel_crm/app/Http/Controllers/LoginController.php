@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Model\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class LoginController extends BaseController
+
+
+
+class LoginController extends Controller
 {
    public function login(){
        return view('crm.login');
@@ -25,6 +26,43 @@ class LoginController extends BaseController
             return ['msg'=>'密码不能为空','icon'=>5,'status'=>2];
         }
 
-        return ['msg'=>'登录成功','icon'=>1,'status'=>1];
+       $obj=new User();
+        $where = [
+            'u_name'=>$name,
+            'status'=>1
+        ];
+        $res=$obj->getSel($where);
+        if(!$res){
+            return ['msg'=>'此用户不存在','icon'=>5,'status'=>2];
+        }else {
+            //加盐值
+            $str = "qwertyuiopasdfghjklzxcvbnm;@%+-*/1234567890";
+            //截取盐值
+            $salt = substr(str_shuffle($str), rand(0, 30), 5);
+
+            foreach ($res as $k => $v) {
+                $arr = $v;
+            }
+            $pwds = md5(md5($pwd) . $arr['salt']);
+
+            if ($pwds == $arr['u_pwd']) {
+                //算出还有多长时间登录
+                $minutes = ceil((3600 - (time() - $arr['u_clear'])) / 60);
+                if ($arr['u_error'] >= 5 && (time() - $arr['u_clear'] < 3600)) {
+                    return ['msg' => '已锁定,还有' . $minutes . '分钟', 'code' => 5];
+                }else{
+                    $data=[
+                        'u_error'=>0,
+                        'u_clear'=>0,
+                        'salt'=>$salt,
+                        'ctime'=>time()
+                    ];
+                    $obj->getUpdate($arr['u_id'],$data);
+                }
+
+
+            }
+//            return ['msg'=>'登录成功','icon'=>1,'status'=>1];
+        }
     }
 }
