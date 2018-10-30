@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 
 
-
+#贾东杰做登录
 class LoginController extends Controller
 {
    public function login(Request $request){

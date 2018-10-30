@@ -20,4 +20,10 @@ Route::get('/', function () {
 
 Route::post('LoginDo','LoginController@login_do');
 Route::any('Home','HomeController@home');
+#回收站
+Route::any('Recycle','RecycleController@recycle');
+#通讯录
+Route::any('Communicate','CommunicateController@communicate');
+Route::any('Page','CommunicateController@page');
+Route::any('Sear','CommunicateController@sear');
 

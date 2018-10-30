@@ -78,11 +78,11 @@
                 <img class="icon" src="./win10/img/icon/win10.png"/>
                 <div class="title">权限管理</div>
             </div>
-            <div class="shortcut" onclick="Win10.openUrl('https://yuri2.cn','<img class=\'icon\' src=\'./win10/img/icon/blogger.png\'/>尤里2号的博客')">
+            <div class="shortcut" onclick="Win10.openUrl('/Recycle','<img class=\'icon\' src=\'./win10/img/icon/blogger.png\'/>回收站')">
                 <img class="icon" src="./win10/img/icon/blogger.png"/>
                 <div class="title">回收站</div>
             </div>
-            <div class="shortcut" onclick="Win10.openUrl('win10ui.yuri2.cn/src/doc.php','<img class=\'icon\' src=\'./win10/img/icon/doc.png\'/>在线文档')">
+            <div class="shortcut" onclick="Win10.openUrl('/Communicate','<img class=\'icon\' src=\'./win10/img/icon/doc.png\'/>通讯录')">
                 <img class="icon" src="./win10/img/icon/doc.png"/>
                 <div class="title">通讯录</div>
             </div>
