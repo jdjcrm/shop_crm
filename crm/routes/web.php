@@ -40,3 +40,45 @@ Route::any('Communicate','CommunicateController@communicate');
 Route::any('Page','CommunicateController@page');
 Route::any('Sear','CommunicateController@sear');
 
+//用户添加  useradd
+Route::any('user_add','UserController@user_add');
+
+//用户执行添加 user_add_do
+Route::any('user_add_do','UserController@user_add_do');
+
+//用户展示  userShow
+Route::any('userShow','UserController@userShow');
+
+//用户展示分页  user_show_page
+Route::any('user_show_page','UserController@user_show_page');
+
+//用户删除  user_dele
+Route::any('user_dele','UserController@userDelete');
+
+//用户修改  user_update
+Route::any('user_update','UserController@userUpdate');
+
+//执行修改 user_update_do
+Route::any('user_update_do','UserController@user_update_do');
+
+//客户管理
+Route::any('client_show','ClientController@client_show');
+
+//客户添加 client_add
+Route::any('client_add','ClientController@client_add');
+
+//客户执行添加  client_add_do
+Route::any('client_add_do','ClientController@client_add_do');
+
+//客户分页 clientList
+Route::any('clientList','ClientController@clientList');
+
+//客户删除  client_dele
+Route::any('client_dele','ClientController@client_dele');
+
+//客户修改  client_update
+Route::any('client_update','ClientController@client_update');
+
+
+//订单展示
+Route::any('orderShow','OrderController@orderShow');
